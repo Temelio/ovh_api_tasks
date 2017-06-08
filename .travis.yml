@@ -30,3 +30,9 @@ deploy:
     tags: true
     repo: Temelio/ovh_api_tasks
     condition: $TOXENV == py27
+
+# Travis pypy version is too old to work with cryptography > 1.0
+# Allow failure time to Travis update
+matrix:
+  allow_failures:
+    - env: "TOXENV=pypy"
