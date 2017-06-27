@@ -20,10 +20,10 @@ def get_file_content(filename):
 
 
 REQUIREMENTS = [
-    'invoke==0.18.1',
+    'invoke==0.19.0',
     'ovh==0.4.7',
     'tabulate==0.7.7',
-    'tenacity==4.1.0',
+    'tenacity==4.2.0',
 ]
 
 REQUIREMENTS_DEV = [
