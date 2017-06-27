@@ -24,11 +24,48 @@ Invoke tasks to work with OVH API
 * Free software: MIT license
 * Documentation: https://ovh-api-tasks.readthedocs.io.
 
+Testing
+-------
 
-Features
+To run tests locally, just run needed environments using tox:
+
+``$ TOXENV=py27-ansible23 tox``
+
+You can enable Paramiko debug if you have an error on Docker fixture create
+(ex: ``Exception: Timeout reached while waiting on service!``)
+
+``$ PARAMIKO_DEBUG=1 TOXENV=py27-ansible23 tox``
+
+Commands
 --------
 
-* TODO
+Get IPs
+~~~~~~~
+
+    ``ovh-api ip.ips``
+
+Return ips linked to the OVH account.
+
+Add backend to legacy IP LB
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    ``ovh-api lb.legacy.add-backend --backend=10.0.0.1 --services=ip-10.0.0.2,ip-10.0.0.3 --probe=http``
+
+Add a backend to legacy IP LoadBalancer services.
+
+Remove backend from legacy IP LB
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    ``ovh-api lb.legacy.del-backend --backend=10.0.0.1 --services=ip-10.0.0.2,ip-10.0.0.3``
+
+Remove a backend from legacy IP LoadBalancer services.
+
+Get all legacy IP LB
+~~~~~~~~~~~~~~~~~~~~
+
+    ``ovh-api lb.legacy.list``
+
+Return OVH IP LoadBalancers services.
 
 Credits
 ---------
