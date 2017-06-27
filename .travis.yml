@@ -7,8 +7,6 @@ python: 3.5
 env:
   - TOXENV=py35
   - TOXENV=py34
-  - TOXENV=py33
-  - TOXENV=py27
   - TOXENV=pypy
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
@@ -28,7 +26,7 @@ deploy:
   on:
     tags: true
     repo: Temelio/ovh_api_tasks
-    condition: $TOXENV == py27
+    condition: $TOXENV == py34
 
 # Travis pypy version is too old to work with cryptography > 1.0
 # Allow failure time to Travis update
