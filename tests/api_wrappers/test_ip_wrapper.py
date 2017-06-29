@@ -99,23 +99,12 @@ def test_add_ip_lb_service_backend(mocker):
     ip.add_ip_lb_service_backend(
         ovh_client, 'test-service', 'test-backend', 'http')
 
-    expected_calls = [
-        mocker.call(
-            'POST',
-            '/ip/loadBalancing/test-service/backend',
-            {'ipBackend': 'test-backend', 'probe': 'http'},
-            True
-        ),
-        mocker.call(
-            'GET',
-            '/ip/loadBalancing/test-service/task',
-            None,
-            True
-        )
-    ]
-
-    for expected_call in expected_calls:
-        assert expected_call in ovh_client.call.mock_calls
+    ovh_client.call.assert_called_with(
+        'POST',
+        '/ip/loadBalancing/test-service/backend',
+        {'ipBackend': 'test-backend', 'probe': 'http'},
+        True
+    )
 
 
 def test_delete_ip_lb_service_backend(mocker):  # pylint: disable=invalid-name
@@ -128,23 +117,12 @@ def test_delete_ip_lb_service_backend(mocker):  # pylint: disable=invalid-name
 
     ip.delete_ip_lb_service_backend(ovh_client, 'test-service', 'test-backend')
 
-    expected_calls = [
-        mocker.call(
-            'DELETE',
-            '/ip/loadBalancing/test-service/backend/test-backend',
-            None,
-            True
-        ),
-        mocker.call(
-            'GET',
-            '/ip/loadBalancing/test-service/task',
-            None,
-            True
-        )
-    ]
-
-    for expected_call in expected_calls:
-        assert expected_call in ovh_client.call.mock_calls
+    ovh_client.call.assert_called_with(
+        'DELETE',
+        '/ip/loadBalancing/test-service/backend/test-backend',
+        None,
+        True
+    )
 
 
 def test_get_ip_lb_service_tasks(mocker):

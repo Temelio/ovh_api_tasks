@@ -58,6 +58,7 @@ setup(
         'ovh_api_tasks.api_wrappers',
         'ovh_api_tasks.tasks',
         'ovh_api_tasks.tasks.load_balancing',
+        'ovh_api_tasks.utils',
     ],
     package_dir={'ovh_api_tasks':
                  'ovh_api_tasks'},

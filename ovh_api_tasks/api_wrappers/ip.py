@@ -3,9 +3,6 @@ Main level for OVH API calls
 """
 
 from urllib.parse import quote_plus
-from tenacity import retry
-from tenacity.stop import stop_after_delay
-from tenacity.wait import wait_fixed
 
 
 def get_ips(ovh_client):
@@ -87,15 +84,10 @@ def add_ip_lb_service_backend(ovh_client, service, backend, probe):
 
     url = '/ip/loadBalancing/{service}/backend'
 
-    task_obj = ovh_client.post(
+    return ovh_client.post(
         url.format(service=quote_plus(service)),
         ipBackend=backend,
         probe=probe)
-
-    print('INFO - Link "{backend}" to "{service}" : task {task_id}'.format(
-        backend=backend, service=service, task_id=task_obj['id']))
-
-    _waiting_ip_lb_service_tasks_done(ovh_client, service)
 
 
 def delete_ip_lb_service_backend(ovh_client, service, backend):
@@ -107,14 +99,9 @@ def delete_ip_lb_service_backend(ovh_client, service, backend):
 
     url = '/ip/loadBalancing/{service}/backend/{backend}'
 
-    task_obj = ovh_client.delete(url.format(
+    return ovh_client.delete(url.format(
         service=quote_plus(service),
         backend=backend))
-
-    print('INFO - Unlink "{backend}" from "{service}" : task {task_id}'.format(
-        backend=backend, service=service, task_id=task_obj['id']))
-
-    _waiting_ip_lb_service_tasks_done(ovh_client, service)
 
 
 def get_ip_lb_service_tasks(ovh_client, service):
@@ -141,21 +128,3 @@ def get_ip_lb_service_task(ovh_client, service, task_id):
     return ovh_client.get(url.format(
         service=quote_plus(service),
         task_id=task_id))
-
-
-@retry(stop=stop_after_delay(10), wait=wait_fixed(2))
-def _waiting_ip_lb_service_tasks_done(ovh_client, service):  # pylint: disable=invalid-name
-    """
-    Waiting legacy load balancing has no tasks in progress
-    """
-
-    tasks = get_ip_lb_service_tasks(ovh_client, service)
-    tasks_count = len(tasks)
-
-    if tasks_count == 0:
-        return True
-
-    print('  {service} - {tasks_count} tasks in progress : {tasks}'.format(
-        service=service, tasks_count=tasks_count, tasks=tasks))
-
-    return False

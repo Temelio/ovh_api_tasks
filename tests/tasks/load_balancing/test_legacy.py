@@ -138,7 +138,7 @@ def test_add_legacy_lb_backend_error(mocker, ip_load_balancing_array):  # pylint
 
 
 @trap
-def test_add_legacy_lb_backend(mocker, ip_load_balancing_array):
+def test_add_legacy_lb_backend(mocker, ip_load_balancing_array, ip_lb_task_add_backend):
     """
     Test lb.legacy.add-backend task without error
     """
@@ -153,15 +153,26 @@ def test_add_legacy_lb_backend(mocker, ip_load_balancing_array):
 
     mocker.patch(
         'ovh_api_tasks.api_wrappers.ip.add_ip_lb_service_backend',
-        return_value=None)
+        return_value=ip_lb_task_add_backend)
+
+    mocker.patch(
+        'ovh_api_tasks.api_wrappers.ip.get_ip_lb_service_tasks',
+        side_effect=[[ip_lb_task_add_backend], []])
 
     lb_legacy_tasks.add_backend_to_legacy_lb(
         MockContext(), '10.0.0.5', 'ip-10.0.0.1,ip-10.0.0.2', 'http')
 
-    output = sys.stdout.getvalue().strip()
+    output = sys.stdout.getvalue().strip().split('\n')
     error = sys.stderr.getvalue()
 
-    assert output == 'INFO - Backend 10.0.0.5 already linked to ip-10.0.0.2'
+    assert output[0] == 'INFO - Link "10.0.0.5" to "ip-10.0.0.1" : task 1234'
+    assert 'ip-10.0.0.1 - 1 task(s) in progress' in output[1]
+    assert "'creationDate': '2017-01-01 12:00:00'" in output[1]
+    assert "'status': 'in progress'" in output[1]
+    assert "action': 'addBackend'" in output[1]
+    assert "'id': '1234'" in output[1]
+    assert output[2] == '  ip-10.0.0.1 - All tasks done'
+    assert output[3] == 'INFO - Backend 10.0.0.5 already linked to ip-10.0.0.2'
     assert error == ''
 
 
@@ -216,7 +227,7 @@ def test_remove_legacy_lb_backend_error(mocker, ip_load_balancing_array):  # pyl
 
 
 @trap
-def test_remove_legacy_lb_backend(mocker, ip_load_balancing_array):
+def test_remove_legacy_lb_backend(mocker, ip_load_balancing_array, ip_lb_task_del_backend):
     """
     Test lb.legacy.remove-backend task without error
     """
@@ -231,13 +242,24 @@ def test_remove_legacy_lb_backend(mocker, ip_load_balancing_array):
 
     mocker.patch(
         'ovh_api_tasks.api_wrappers.ip.delete_ip_lb_service_backend',
-        return_result=None)
+        return_value=ip_lb_task_del_backend)
+
+    mocker.patch(
+        'ovh_api_tasks.api_wrappers.ip.get_ip_lb_service_tasks',
+        side_effect=[[ip_lb_task_del_backend], []])
 
     lb_legacy_tasks.remove_backend_from_legacy_lb(
         MockContext(), '10.0.0.5', 'ip-10.0.0.1,ip-10.0.0.2')
 
-    output = sys.stdout.getvalue().strip()
+    output = sys.stdout.getvalue().strip().split('\n')
     error = sys.stderr.getvalue()
 
-    assert output == 'INFO - Backend 10.0.0.5 not linked to ip-10.0.0.1'
+    assert output[0] == 'INFO - Backend 10.0.0.5 not linked to ip-10.0.0.1'
+    assert output[1] == 'INFO - Unlink "10.0.0.5" from "ip-10.0.0.2" : task 1234'
+    assert 'ip-10.0.0.2 - 1 task(s) in progress' in output[2]
+    assert "'creationDate': '2017-01-01 12:00:00'" in output[2]
+    assert "'status': 'in progress'" in output[2]
+    assert "action': 'delBackend'" in output[2]
+    assert "'id': '1234'" in output[2]
+    assert output[3] == '  ip-10.0.0.2 - All tasks done'
     assert error == ''

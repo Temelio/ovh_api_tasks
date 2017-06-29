@@ -28,3 +28,31 @@ def ip_load_balancing_ip():
         'state': 'ok',
         'stickiness': 'none'
     }
+
+
+@pytest.fixture()
+def ip_lb_task_add_backend():
+    """
+    Return a load balancer task
+    """
+
+    return {
+        'creationDate': '2017-01-01 12:00:00',
+        'status': 'in progress',
+        'action': 'addBackend',
+        'id': '1234',
+    }
+
+
+@pytest.fixture()
+def ip_lb_task_del_backend():
+    """
+    Return a load balancer task
+    """
+
+    return {
+        'creationDate': '2017-01-01 12:00:00',
+        'status': 'in progress',
+        'action': 'delBackend',
+        'id': '1234',
+    }
