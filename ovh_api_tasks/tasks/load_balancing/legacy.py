@@ -11,6 +11,20 @@ from ovh_api_tasks.api_wrappers import ip as ip_api_wrapper
 from ovh_api_tasks.utils import ip_lb as ip_lb_utils
 
 
+def _build_list_task_line(service_data, service_backends):
+    """
+    Create a legacy Load Balancer line for list task
+    """
+
+    return [
+        service_data['serviceName'],
+        ', '.join(service_data['zone']).upper(),
+        service_data['ipLoadBalancing'],
+        ', '.join(service_backends),
+        service_data['state'],
+    ]
+
+
 @task(name='list')
 def get_legacy_lb(context):  # pylint: disable=unused-argument
     """
@@ -33,18 +47,12 @@ def get_legacy_lb(context):  # pylint: disable=unused-argument
             service_backends = ip_api_wrapper.get_ip_lb_service_backends(
                 ovh_client, service)
 
-            services_details.append([
-                service_data['serviceName'],
-                ', '.join(service_data['zone']).upper(),
-                service_data['ipLoadBalancing'],
-                ', '.join(service_backends),
-                service_data['state'],
-            ])
+            services_details.append(
+                _build_list_task_line(service_data, service_backends))
         except ovh.exceptions.APIError as error:
-            if 'this service is expired' in str(error).lower():
-                services_expired.append([service])
-            else:
+            if 'this service is expired' not in str(error).lower():
                 raise
+            services_expired.append([service])
 
     print(tabulate(services_details, headers=[
         'Service name', 'Zone', 'Load Balancing IP', 'Backends', 'State']))
