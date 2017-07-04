@@ -28,7 +28,7 @@ def _build_list_task_line(service_data, service_backends):
 @task(name='list')
 def get_legacy_lb(context):  # pylint: disable=unused-argument
     """
-    Return OVH IP LoadBalancers services
+    Return OVH legacy IP LoadBalancers services
     """
 
     services_details = []
