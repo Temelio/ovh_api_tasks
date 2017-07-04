@@ -34,7 +34,8 @@ def test_cli_tasks():
         r'ip.ips \(ip\)\s+Return IPs',
         r'lb.legacy.add-backend\s+Add a backend to legacy IP LoadBalancer',
         r'lb.legacy.del-backend\s+Remove a backend from legacy IP LoadBalancer',
-        r'lb.legacy.list\s+Return OVH IP LoadBalancers services',
+        r'lb.legacy.list\s+Return OVH legacy IP LoadBalancers services',
+        r'lb.next_gen.list\s+Return OVH Next Gen IP LoadBalancers services',
     ]
 
     for task_regex in tasks_regex:

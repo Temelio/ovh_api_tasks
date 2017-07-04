@@ -22,6 +22,7 @@ def get_file_content(filename):
 REQUIREMENTS = [
     'invoke==0.19.0',
     'ovh==0.4.7',
+    'pyyaml==3.12.0',
     'tabulate==0.7.7',
     'tenacity==4.2.0',
 ]
