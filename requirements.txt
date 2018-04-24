@@ -1,4 +1,4 @@
 invoke==0.22.1
 ovh==0.4.8
 tabulate==0.8.2
-tenacity==4.10.0
+tenacity==4.11.0
