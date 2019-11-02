@@ -36,7 +36,7 @@ REQUIREMENTS_DEV = [
     'coverage==4.4.1',
     'Sphinx==1.6.2',
     'cryptography==1.9',
-    'PyYAML==3.12',
+    'PyYAML==5.1',
     'pytest==3.1.1',
     'pytest-cov==2.5.1',
     'pytest-mock==1.6.0',
