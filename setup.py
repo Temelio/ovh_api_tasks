@@ -35,7 +35,7 @@ REQUIREMENTS_DEV = [
     'tox==2.7.0',
     'coverage==4.4.1',
     'Sphinx==1.6.2',
-    'cryptography==1.9',
+    'cryptography==3.2',
     'PyYAML==3.12',
     'pytest==3.1.1',
     'pytest-cov==2.5.1',
