@@ -27,7 +27,7 @@ REQUIREMENTS = [
 ]
 
 REQUIREMENTS_DEV = [
-    'pip==9.0.1',
+    'pip==21.1',
     'bumpversion==0.5.3',
     'wheel==0.29.0',
     'watchdog==0.8.3',
